@@ -3,13 +3,13 @@ The PHP library which helps to convert entities to InfluxDB points and back.
 Uses annotation for entities configuration. 
 For better understanding of concepts please see official InfluxDB documentation.
 
-# Installation
+## Installation
 
 ```bash
 composer require enepochatova/influxdb-orm
 ```
 
-# Getting started
+## Getting started
 
 Create entity to be stored in DB. Give it the <b>Measurement</b> annotation. The <i>"name"</i> property of annotation is required.
 
