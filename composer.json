@@ -1,0 +1,26 @@
+{
+    "name": "enepochatova/influxdb-orm",
+    "description": "The PHP library which helps to convert entities to InfluxDB points and back. Uses annotations for entities configuration.",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.2",
+        "influxdb/influxdb-php": "^1.14",
+        "doctrine/annotations": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "InfluxDB\\ORM\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "InfluxDB\\Test\\ORM\\": "tests"
+        }
+    }
+}
