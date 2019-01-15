@@ -3,7 +3,6 @@
     "description": "The PHP library which helps to convert entities to InfluxDB points and back. Uses annotations for entities configuration.",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": "^7.2",
