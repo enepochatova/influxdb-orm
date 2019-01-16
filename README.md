@@ -1,7 +1,7 @@
 # InfluxDB ORM
 The PHP library which helps to convert entities to InfluxDB points and back. 
-Uses annotation for entities configuration. 
-For better understanding of concepts please see official InfluxDB documentation.
+Uses annotations for entities configuration. 
+For better understanding of key concepts please check the official InfluxDB documentation.
 
 ## Installation
 
@@ -11,7 +11,7 @@ composer require enepochatova/influxdb-orm
 
 ## Getting started
 
-Create entity to be stored in DB. Give it the <b>Measurement</b> annotation. The <i>"name"</i> property of annotation is required.
+Create entity to be stored in DB. Give it the <b>Measurement</b> annotation. The <i>name</i> property of annotation is required.
 
 ```php
 <?php
@@ -34,8 +34,8 @@ The annotations for properties are:
  - <b>Value</b>: Must be given to numeric property and be unique among class hierarchy. 
  If this annotation is not given to any property of class hierarchy, 
  it will be equal to null and the field 'value' will not be created.
- - <b>Field</b>: Has required "key" property, which is very similar to column name in relational DB.
- - <b>Tag</b>: Has required "key" and optional "type" properties. By default "type" is "string". 
+ - <b>Field</b>: Has required <i>key</i> property, which is very similar to column name in relational DB.
+ - <b>Tag</b>: Has required <i>key</i> and optional <i>type</i> properties. By default <i>type</i> is "string". 
   The other valid values are: "int", "float", "bool". 
   Be attended that <b>tags</b> are always stored as strings in DB. 
   That's why we need to specify the original type of class property for convert it back 
