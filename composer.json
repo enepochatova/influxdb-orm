@@ -19,7 +19,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "InfluxDB\\Test\\ORM\\": "tests"
+            "InfluxDB\\ORM\\Test\\": "tests"
         }
     }
 }
