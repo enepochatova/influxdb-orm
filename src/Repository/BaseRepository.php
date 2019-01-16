@@ -141,7 +141,7 @@ class BaseRepository
         $row['time'] = strtotime($row['time']);
 
         foreach ($row as $key => $value) {
-            if ($propertiesMap[$key]) {
+            if (isset($propertiesMap[$key])) {
                 /**
                  * @var PropertyMap $property
                  */
