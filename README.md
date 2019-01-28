@@ -40,6 +40,8 @@ The annotations for properties are:
   Be attended that <b>tags</b> are always stored as strings in DB. 
   That's why we need to specify the original type of class property for convert it back 
   and build entity correctly after we got data from DB.
+ - <b>ArrayOfMetrics</b>:  Must be given to property which contains one-dimensional associative array. 
+ This annotation must be unique among class hierarchy. Array values will be stored in DB as fields with appropriate keys.
  - <b>Timestamp</b>: Must be given to numeric property and be unique among class hierarchy. 
  If this annotation is not given to any property of class hierarchy, 
  it will be equal to null and the point will be stored with current server timestamp.
@@ -88,6 +90,12 @@ class Cpu
      * @InfluxDB\Tag(key="category", type="int")
      */
     private $categoryId;
+    
+    /**
+     * @var array
+     * @InfluxDB\ArrayOfMetrix()
+     */
+    private $config;
 
     /**
      * Cpu constructor.
@@ -97,17 +105,26 @@ class Cpu
      * @param string $host
      * @param int $categoryId
      */
-    public function __construct($value, $tasks, $activeServices, $host, $categoryId)
+    public function __construct($value, $tasks, $activeServices, $host, $categoryId, $config)
     {
         $this->value = $value;
         $this->tasks = $tasks;
         $this->activeServices = $activeServices;
         $this->host = $host;
         $this->categoryId = $categoryId;
+        $this->config = $config;
     }
+    
+   // getters here
 
 }
+
 ```
+
+<aside class="notice">
+You need to set class properties public or implement getters for them.
+</aside>
+
 
 Also it is possible to map <b>inherited</b> classes. 
 The reading of annotations starts from the target class and goes to its parents.

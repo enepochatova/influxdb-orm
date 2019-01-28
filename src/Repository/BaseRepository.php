@@ -9,6 +9,7 @@ namespace InfluxDB\ORM\Repository;
 
 
 use InfluxDB\ORM\Mapping\AnnotationDriver;
+use InfluxDB\ORM\Mapping\Exception\AnnotationException;
 use InfluxDB\ORM\Mapping\Map\PointMap;
 use InfluxDB\ORM\Mapping\Map\PropertyMap;
 use InfluxDB\Database;
@@ -68,7 +69,7 @@ class BaseRepository
      * @throws Database\Exception
      * @throws \InfluxDB\Exception
      */
-    public function write($entity)
+    public function write($entity): bool
     {
         $valuePropertyMap = $this->pointMap->getValuePropertyMap();
         $value = null;
@@ -80,6 +81,12 @@ class BaseRepository
         $tags = $this->prepareKeyValues($this->pointMap->getTagPropertiesMap(), $entity);
 
         $fields = $this->prepareKeyValues($this->pointMap->getFieldPropertiesMap(), $entity);
+
+        $arrayPropertyMap = $this->pointMap->getArrayOfMetricsPropertyMap();
+
+        if (null !== $arrayPropertyMap) {
+            $fields[] = $this->prepareKeyValues([$arrayPropertyMap], $entity);
+        }
 
         $timestampPropertyMap = $this->pointMap->getTimestampPropertyMap();
         $timestamp = null;
@@ -138,6 +145,8 @@ class BaseRepository
             $this->pointMap->getFieldPropertiesMap()
         );
 
+        $arrayPropertyMap = $this->pointMap->getArrayOfMetricsPropertyMap();
+
         $row['time'] = strtotime($row['time']);
 
         foreach ($row as $key => $value) {
@@ -153,6 +162,8 @@ class BaseRepository
                     $value = $convertFunction($value);
                 }
                 $args[$propertyName] = $value;
+            } elseif ($arrayPropertyMap !== null) {
+                $args[$arrayPropertyMap->getName()][] = $value;
             }
         }
 
@@ -208,8 +219,25 @@ class BaseRepository
     {
         $keyValues = [];
         foreach ($propertiesMap as $key => $propertyMap) {
-            $getValue = $this->buildGetterName($propertyMap->getName());
-            $keyValues[$key] = $entity->$getValue();
+            $propertyName = $propertyMap->getName();
+            try {
+                $value = $entity->$propertyName;
+            } catch (\Exception $exception) {
+                try {
+                    $getValue = $this->buildGetterName($propertyMap->getName());
+                    $value = $entity->$getValue();
+                } catch (\Exception $exception) {
+                    throw new AnnotationException("Can not get property value. Property {$propertyName} is not public and has no getter.");
+                }
+            }
+
+            if ($propertyMap->getType() === 'array') {
+                foreach ($value as $index => $item) {
+                    $keyValues[$index] = $item;
+                }
+            } else {
+                $keyValues[$key] = $value;
+            }
         }
         return $keyValues;
     }
@@ -218,7 +246,7 @@ class BaseRepository
      * @param string $propertyName
      * @return string
      */
-    protected function buildGetterName(string $propertyName)
+    protected function buildGetterName(string $propertyName): string
     {
         return 'get' . ucfirst($propertyName);
     }

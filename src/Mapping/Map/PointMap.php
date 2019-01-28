@@ -36,14 +36,20 @@ final class PointMap
     /**
      * @var null|PropertyMap
      */
+    private $arrayOfMetricsPropertyMap;
+
+    /**
+     * @var null|PropertyMap
+     */
     private $timestampPropertyMap;
 
     /**
      * PointMap constructor.
      * @param string $measurement
      * @param PropertyMap|null $valuePropertyMap
-     * @param PropertyMap[] $fieldPropertiesMap
-     * @param PropertyMap[] $tagPropertiesMap
+     * @param array $fieldPropertiesMap
+     * @param array $tagPropertiesMap
+     * @param PropertyMap|null $arrayOfMetricsPropertyMap
      * @param PropertyMap|null $timestampPropertyMap
      */
     public function __construct(
@@ -51,6 +57,7 @@ final class PointMap
         ?PropertyMap $valuePropertyMap,
         array $fieldPropertiesMap,
         array $tagPropertiesMap,
+        ?PropertyMap $arrayOfMetricsPropertyMap,
         ?PropertyMap $timestampPropertyMap
     )
     {
@@ -58,6 +65,7 @@ final class PointMap
         $this->valuePropertyMap = $valuePropertyMap;
         $this->fieldPropertiesMap = $fieldPropertiesMap;
         $this->tagPropertiesMap = $tagPropertiesMap;
+        $this->arrayOfMetricsPropertyMap = $arrayOfMetricsPropertyMap;
         $this->timestampPropertyMap = $timestampPropertyMap;
     }
 
@@ -91,6 +99,14 @@ final class PointMap
     public function getTagPropertiesMap(): array
     {
         return $this->tagPropertiesMap;
+    }
+
+    /**
+     * @return PropertyMap|null
+     */
+    public function getArrayOfMetricsPropertyMap(): ?PropertyMap
+    {
+        return $this->arrayOfMetricsPropertyMap;
     }
 
     /**

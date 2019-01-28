@@ -45,13 +45,13 @@ class AnnotationDriver
             throw new AnnotationException($reflectionClass->name. ': Measurement name must be a non-empty string.');
         }
 
-        $valuePropertyMap = $timestampPropertyMap = null;
+        $valuePropertyMap = $timestampPropertyMap = $arrayOfMetricsPropertyMap = null;
         $fieldPropertiesMaps = $tagPropertiesMaps = [];
 
         foreach ($reflectionClass->getProperties() as $property) {
             if ($annotation = $this->reader->getPropertyAnnotation($property, Annotations\Value::class)) {
                 if ($valuePropertyMap !== null) {
-                    throw new AnnotationException("Few 'Value' annotations of  found in '{$reflectionClass->name}'. Maximum one property of class can has this annotation.");
+                    throw new AnnotationException("Few 'Value' annotations found in '{$reflectionClass->name}'. Maximum one property of class can has this annotation.");
                 }
                 $valuePropertyMap = new PropertyMap($property->name);
             }
@@ -64,9 +64,16 @@ class AnnotationDriver
                 $tagPropertiesMaps[$annotation->key] = new PropertyMap($property->name, $annotation->type);
             }
 
+            if ($annotation = $this->reader->getPropertyAnnotation($property, Annotations\ArrayOfMetrics::class)) {
+                if ($arrayOfMetricsPropertyMap !== null) {
+                    throw new AnnotationException("Few 'ArrayOfMetrics' annotations found in '{$reflectionClass->name}'. Maximum one property of class can has this annotation.");
+                }
+                $arrayOfMetricsPropertyMap = new PropertyMap($property->name, 'array');
+            }
+
             if ($annotation = $this->reader->getPropertyAnnotation($property, Annotations\Timestamp::class)) {
                 if ($timestampPropertyMap !== null) {
-                    throw new AnnotationException("Few 'Timestamp' annotations of  found in '{$reflectionClass->name}'. Maximum one property of class can has this annotation.");
+                    throw new AnnotationException("Few 'Timestamp' annotations found in '{$reflectionClass->name}'. Maximum one property of class can has this annotation.");
                 }
                 $timestampPropertyMap = new PropertyMap($property->name);
             }
@@ -77,6 +84,7 @@ class AnnotationDriver
             $valuePropertyMap,
             $fieldPropertiesMaps,
             $tagPropertiesMaps,
+            $arrayOfMetricsPropertyMap,
             $timestampPropertyMap
         );
     }
