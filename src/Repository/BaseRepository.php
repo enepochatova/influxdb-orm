@@ -222,11 +222,11 @@ class BaseRepository
             $propertyName = $propertyMap->getName();
             try {
                 $value = $entity->$propertyName;
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 try {
                     $getValue = $this->buildGetterName($propertyMap->getName());
                     $value = $entity->$getValue();
-                } catch (\Exception $exception) {
+                } catch (\Throwable $exception) {
                     throw new AnnotationException("Can not get property value. Property {$propertyName} is not public and has no getter.");
                 }
             }
