@@ -85,7 +85,7 @@ class BaseRepository
         $arrayPropertyMap = $this->pointMap->getArrayOfMetricsPropertyMap();
 
         if (null !== $arrayPropertyMap) {
-            $fields[] = $this->prepareKeyValues([$arrayPropertyMap], $entity);
+            $fields = array_merge($fields, $this->prepareKeyValues([$arrayPropertyMap], $entity));
         }
 
         $timestampPropertyMap = $this->pointMap->getTimestampPropertyMap();
