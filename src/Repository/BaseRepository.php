@@ -162,8 +162,8 @@ class BaseRepository
                     $value = $convertFunction($value);
                 }
                 $args[$propertyName] = $value;
-            } elseif ($arrayPropertyMap !== null) {
-                $args[$arrayPropertyMap->getName()][] = $value;
+            } elseif ($arrayPropertyMap !== null && $value !== null) {
+                $args[$arrayPropertyMap->getName()][$key] = $value;
             }
         }
 
